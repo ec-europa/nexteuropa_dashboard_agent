@@ -12,5 +12,5 @@ function nexteuropa_dashboard_agent_uli_page() {
   $uid = 1;
   $account = user_load($uid);
 
-  return user_pass_reset_url($account) . '/login';
+  drupal_json_output(user_pass_reset_url($account) . '/login');
 }
