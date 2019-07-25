@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Logic for nexteuropa_dashboard_agent output
+ * Logic for nexteuropa_dashboard_agent output.
  */
 
 /**
