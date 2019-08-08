@@ -9,7 +9,7 @@
  * Return JSON formatted module informations.
  */
 function nexteuropa_dashboard_agent_status_page() {
-  $system_modules = system_list('module_enabled');
+  $system_modules = system_rebuild_module_data();
   $system_themes = list_themes(TRUE);
 
   // Needless initialisation, but hey.
