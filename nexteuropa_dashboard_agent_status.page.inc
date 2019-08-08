@@ -68,13 +68,7 @@ function nexteuropa_dashboard_agent_status_page() {
     );
   }
 
-  // Doublecheck if drupal version is reported, if not add bootstrap define.
-  if (!isset($res['core']['drupal'])) {
-    $res['core']['drupal'] = array('version' => VERSION);
-  }
-
-  $drupal_version = array('drupal_version' => '7');
-
+  $drupal_version = array('drupal_version' => VERSION);
   $platform_tag = 'Information not available on the server.';
   $platform_commit_number = 'Information not available on the server.';
   $platform_installation_time = 'Information not available on the server.';
