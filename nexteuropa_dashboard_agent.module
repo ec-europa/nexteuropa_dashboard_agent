@@ -65,7 +65,13 @@ function nexteuropa_dashboard_agent_access_callback($token = FALSE) {
 
     $allowed_ips = variable_get('nexteuropa_dashboard_agent_allowed_ip_range', NULL);
     if (empty($allowed_ips)) {
-      return TRUE;
+      watchdog(
+        'nexteuropa_dashboard_agent',
+        "Variable with allowed IP range isn't set. Request blocked.",
+        array(),
+        WATCHDOG_WARNING
+      );
+      return FALSE;
     }
     else {
       $allowed_ips = preg_replace('/\s+/', '', $allowed_ips);
