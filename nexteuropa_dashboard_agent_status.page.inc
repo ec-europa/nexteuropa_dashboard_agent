@@ -42,6 +42,8 @@ function nexteuropa_dashboard_agent_status_page() {
         'status' => $module_info->status,
         'schema_version' => $module_info->schema_version,
         'location' => $module_info->filename,
+        'package' => $module_info->info['package'],
+        'requires' => array_keys($module_info->requires),
       );
       continue;
     }
@@ -54,6 +56,8 @@ function nexteuropa_dashboard_agent_status_page() {
         'status' => $module_info->status,
         'schema_version' => $module_info->schema_version,
         'location' => $module_info->filename,
+        'package' => $module_info->info['package'],
+        'requires' => array_keys($module_info->requires),
       );
       continue;
     }
@@ -65,6 +69,8 @@ function nexteuropa_dashboard_agent_status_page() {
       'status' => $module_info->status,
       'schema_version' => $module_info->schema_version,
       'location' => $module_info->filename,
+      'package' => $module_info->info['package'],
+      'requires' => array_keys($module_info->requires),
     );
   }
 
