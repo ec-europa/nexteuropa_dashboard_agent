@@ -1,0 +1,5 @@
+nexteuropa_dashboard_agent.admin_settings:
+  title: 'NextEuropa Dashboard'
+  parent: system.admin_config_system
+  description: 'Configure NextEuropa Dashboard module.'
+  route_name: nexteuropa_dashboard_agent.admin_settings

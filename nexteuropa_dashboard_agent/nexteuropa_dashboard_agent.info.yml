@@ -1,0 +1,6 @@
+type: module
+name: NextEuropa Dashboard Agent
+description: "Agent used from the NextEuropa Dashboard. Provides an overview of all the used modules and a way to get a one time login link."
+configure: nexteuropa_dashboard_agent.admin_settings
+core: '8.x'
+project: 'nexteuropa_dashboard_agent'

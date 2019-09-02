@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Installation file for nexteuropa_dashboard_agent.
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * Creates a unique set of tokens for this installation.
+ */
+function nexteuropa_dashboard_agent_install() {
+  $encrypt = Drupal::service('nexteuropa_dashboard_agent.encrypt');
+  $config = Drupal::configFactory()->getEditable('nexteuropa_dashboard_agent.settings');
+  $config->set('nexteuropa_dashboard_agent_token', $encrypt::getToken());
+  $config->set('nexteuropa_dashboard_agent_encrypt_token', $encrypt::getToken());
+  $config->set('nexteuropa_dashboard_agent_use_encryption', 0);
+  $config->save();
+}

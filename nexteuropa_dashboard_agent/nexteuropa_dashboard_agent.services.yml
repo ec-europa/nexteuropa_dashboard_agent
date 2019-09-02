@@ -1,0 +1,3 @@
+services:
+  nexteuropa_dashboard_agent.encrypt:
+    class: Drupal\nexteuropa_dashboard_agent\Services\NextEuropaDashboardEncryption
