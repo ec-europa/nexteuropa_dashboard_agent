@@ -7,6 +7,7 @@
 
 namespace Drupal\nexteuropa_dashboard_agent\Form;
 
+use Drupal;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -38,6 +39,12 @@ class NextEuropaDashboardSettingsForm extends ConfigFormBase {
       '#maxlength' => 60,
       '#disabled' => TRUE,
     );
+    $form['update_tokens'] = array(
+      '#type' => 'submit',
+      '#value' => t('Update tokens'),
+      '#name' => 'update_tokens',
+    );
+    //$form['#submit'][] = '_nexteuropa_dashboard_agent_update_tokens';
 
     $form['nexteuropa_dashboard_agent_use_encryption'] = array(
       '#type' => 'checkbox',
@@ -70,6 +77,13 @@ class NextEuropaDashboardSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    if ($form_state->getTriggeringElement()['#name'] == 'update_tokens') {
+      $encrypt = Drupal::service('nexteuropa_dashboard_agent.encrypt');
+      $this->config('nexteuropa_dashboard_agent.settings')
+        ->set('nexteuropa_dashboard_agent_token', $encrypt::getToken())
+        ->set('nexteuropa_dashboard_agent_encrypt_token', $encrypt::getToken());
+    }
+
     $this->config('nexteuropa_dashboard_agent.settings')
       ->set('nexteuropa_dashboard_agent_use_encryption', $form_state->getValue('nexteuropa_dashboard_agent_use_encryption'))
       ->set('nexteuropa_dashboard_agent_allowed_ip_range', $form_state->getValue('nexteuropa_dashboard_agent_allowed_ip_range'))
