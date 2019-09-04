@@ -135,6 +135,11 @@ class NextEuropaDashboardController extends ControllerBase {
       ];
     }
 
+    $res = array_merge(
+      $res,
+      ['drupal_version' => \DRUPAL::VERSION],
+      ['php_version' => phpversion()]);
+
     $use_encryption = $this->config('nexteuropa_dashboard_agent.settings')
       ->get('nexteuropa_dashboard_agent_use_encryption');
     if ($use_encryption && function_exists('openssl_random_pseudo_bytes')) {
@@ -142,16 +147,10 @@ class NextEuropaDashboardController extends ControllerBase {
       return new JsonResponse([
         "nexteuropa_dashboard" => "encrypted_openssl",
         "data" => $res,
-        'drupal_version' => \DRUPAL::VERSION,
-        "php_version" => phpversion(),
       ]);
     }
     else {
-      return new JsonResponse([
-        "nexteuropa_dashboard" => $res,
-        'drupal_version' => \DRUPAL::VERSION,
-        "php_version" => phpversion(),
-      ]);
+      return new JsonResponse(["nexteuropa_dashboard" => $res]);
     }
   }
 
