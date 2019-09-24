@@ -60,7 +60,7 @@ function nexteuropa_dashboard_agent_menu_site_status_alter(&$menu_site_status, $
  */
 function nexteuropa_dashboard_agent_access_callback($token = FALSE) {
 
-  $defined_token = variable_get('nexteuropa_dashboard_agent_token', '');
+  $defined_token = _nexteuropa_dashboard_agent_get_token('nexteuropa_dashboard_agent_token');
   if ($token == $defined_token) {
 
     $allowed_ips = variable_get('nexteuropa_dashboard_agent_allowed_ip_range', NULL);
@@ -109,4 +109,47 @@ function nexteuropa_dashboard_agent_access_callback($token = FALSE) {
     );
     return FALSE;
   }
+}
+
+/**
+ * Stores a given token in private file directory.
+ *
+ * @param string $name
+ *   The name of the token.
+ * @param string $token
+ *   The token to be stored.
+ */
+function _nexteuropa_dashboard_agent_set_token($name, $token) {
+  file_unmanaged_save_data($token, 'private://' . $name, FILE_EXISTS_REPLACE);
+}
+
+/**
+ * Retrieves a token stored in private file directory.
+ *
+ * @param string $name
+ *   The name of the token.
+ *
+ * @return string
+ *   'Error-no-token' when the token doesn't exist.
+ */
+function _nexteuropa_dashboard_agent_get_token($name) {
+  $real_path = drupal_realpath('private://' . $name);
+  $token = file_get_contents($real_path);
+
+  if ($token !== FALSE) {
+    return $token;
+  }
+  else {
+    return 'Error-no-token';
+  }
+}
+
+/**
+ * Deletes a token stored in private file directory.
+ *
+ * @param string $name
+ *   The name of the token.
+ */
+function _nexteuropa_dashboard_agent_remove_token($name) {
+  file_unmanaged_delete('private://' . $name);
 }

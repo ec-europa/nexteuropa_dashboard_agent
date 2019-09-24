@@ -25,8 +25,8 @@ function nexteuropa_dashboard_agent_drush_command() {
  * Callback function for drush command ne_dashboard_agent_update_tokens.
  */
 function drush_ne_dashboard_agent_update_tokens() {
-  variable_set('nexteuropa_dashboard_agent_token', NextEuropaDashboardAgentEncryption::getToken());
-  variable_set('nexteuropa_dashboard_agent_encrypt_token', NextEuropaDashboardAgentEncryption::getToken());
+  _nexteuropa_dashboard_agent_set_token('nexteuropa_dashboard_agent_token', NextEuropaDashboardAgentEncryption::getToken());
+  _nexteuropa_dashboard_agent_set_token('nexteuropa_dashboard_agent_encrypt_token', NextEuropaDashboardAgentEncryption::getToken());
 
   module_load_include('inc', 'nexteuropa_dashboard_agent', 'nexteuropa_dashboard_agent.admin');
   drush_print('New siteUUID is: ' . nexteuropa_dashboard_agent_get_site_uu_id());

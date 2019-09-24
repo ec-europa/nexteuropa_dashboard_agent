@@ -42,8 +42,8 @@ class NextEuropaDashboardAgentEncryption {
    * @throws \Exception
    */
   public static function encrypt($plaintext) {
-    $encryption_token = variable_get('nexteuropa_dashboard_agent_encrypt_token', NULL);
-    if (NULL === $encryption_token) {
+    $encryption_token = _nexteuropa_dashboard_agent_get_token('nexteuropa_dashboard_agent_encrypt_token');
+    if ('Error-no-token' === $encryption_token) {
       $error = 'Error: No encryption token defined.';
       throw new Exception($error);
     }

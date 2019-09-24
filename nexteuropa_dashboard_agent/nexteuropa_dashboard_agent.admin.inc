@@ -57,9 +57,9 @@ function nexteuropa_dashboard_agent_form($form, &$form_state) {
  *   The site UUID.
  */
 function nexteuropa_dashboard_agent_get_site_uu_id() {
-  $siteUUID = variable_get('nexteuropa_dashboard_agent_token', 'Error-no-token');
+  $siteUUID = _nexteuropa_dashboard_agent_get_token('nexteuropa_dashboard_agent_token');
   $siteUUID .= "-";
-  $siteUUID .= variable_get('nexteuropa_dashboard_agent_encrypt_token', 'Error-no-token');
+  $siteUUID .= _nexteuropa_dashboard_agent_get_token('nexteuropa_dashboard_agent_encrypt_token');
 
   return $siteUUID;
 }
@@ -74,7 +74,7 @@ function nexteuropa_dashboard_agent_get_site_uu_id() {
  */
 function _nexteuropa_dashboard_agent_update_tokens($form, $form_state) {
   if ($form_state['clicked_button']['#name'] == 'update_tokens') {
-    variable_set('nexteuropa_dashboard_agent_token', NextEuropaDashboardAgentEncryption::getToken());
-    variable_set('nexteuropa_dashboard_agent_encrypt_token', NextEuropaDashboardAgentEncryption::getToken());
+    _nexteuropa_dashboard_agent_set_token('nexteuropa_dashboard_agent_token', NextEuropaDashboardAgentEncryption::getToken());
+    _nexteuropa_dashboard_agent_set_token('nexteuropa_dashboard_agent_encrypt_token', NextEuropaDashboardAgentEncryption::getToken());
   }
 }
