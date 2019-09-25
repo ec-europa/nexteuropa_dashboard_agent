@@ -8,6 +8,7 @@
 namespace Drupal\nexteuropa_dashboard_agent\Commands;
 
 use Drupal;
+use Drupal\nexteuropa_dashboard_agent\Services\NextEuropaDashboardEncryption;
 use Drush\Commands\DrushCommands;
 
 /**
@@ -31,17 +32,14 @@ class NextEuropaDashboardAgentCommands extends DrushCommands {
    */
   public function ne_dashboard_agent_update_tokens() {
     $encrypt = Drupal::service('nexteuropa_dashboard_agent.encrypt');
-    $config = Drupal::configFactory()->getEditable('nexteuropa_dashboard_agent.settings');
-    $config
-      ->set('nexteuropa_dashboard_agent_token', $encrypt::getToken())
-      ->set('nexteuropa_dashboard_agent_encrypt_token', $encrypt::getToken())
-      ->save();
+    NextEuropaDashboardEncryption::set_token('nexteuropa_dashboard_agent_token', $encrypt::getToken());
+    NextEuropaDashboardEncryption::set_token('nexteuropa_dashboard_agent_encrypt_token', $encrypt::getToken());
 
     return
       'New siteUUID is: '
-      . $config->get('nexteuropa_dashboard_agent_token')
+      . NextEuropaDashboardEncryption::get_token('nexteuropa_dashboard_agent_token')
       . "-"
-      . $config->get('nexteuropa_dashboard_agent_encrypt_token');
+      . NextEuropaDashboardEncryption::get_token('nexteuropa_dashboard_agent_encrypt_token');
   }
 
 }

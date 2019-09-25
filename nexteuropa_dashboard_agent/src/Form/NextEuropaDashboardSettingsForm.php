@@ -10,6 +10,7 @@ namespace Drupal\nexteuropa_dashboard_agent\Form;
 use Drupal;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\nexteuropa_dashboard_agent\Services\NextEuropaDashboardEncryption;
 
 /**
  * Configure pants settings for this site.
@@ -32,8 +33,8 @@ class NextEuropaDashboardSettingsForm extends ConfigFormBase {
     $form['nexteuropa_dashboard_service'] = array(
       '#type' => 'textfield',
       '#title' => t('Your siteUUID'),
-      '#description' => $config->get('nexteuropa_dashboard_agent_token') . "-" . $config->get('nexteuropa_dashboard_agent_encrypt_token'),
-      '#default_value' => $config->get('nexteuropa_dashboard_agent_token') . "-" . $config->get('nexteuropa_dashboard_agent_encrypt_token'),
+      '#description' => NextEuropaDashboardEncryption::get_token('nexteuropa_dashboard_agent_token') . "-" . NextEuropaDashboardEncryption::get_token('nexteuropa_dashboard_agent_encrypt_token'),
+      '#default_value' => NextEuropaDashboardEncryption::get_token('nexteuropa_dashboard_agent_token') . "-" . NextEuropaDashboardEncryption::get_token('nexteuropa_dashboard_agent_encrypt_token'),
       '#attributes' => array('style' => array('display:none;')),
       '#size' => 60,
       '#maxlength' => 60,
@@ -79,9 +80,8 @@ class NextEuropaDashboardSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($form_state->getTriggeringElement()['#name'] == 'update_tokens') {
       $encrypt = Drupal::service('nexteuropa_dashboard_agent.encrypt');
-      $this->config('nexteuropa_dashboard_agent.settings')
-        ->set('nexteuropa_dashboard_agent_token', $encrypt::getToken())
-        ->set('nexteuropa_dashboard_agent_encrypt_token', $encrypt::getToken());
+      NextEuropaDashboardEncryption::set_token('nexteuropa_dashboard_agent_token', $encrypt::getToken());
+      NextEuropaDashboardEncryption::set_token('nexteuropa_dashboard_agent_encrypt_token', $encrypt::getToken());
     }
 
     $this->config('nexteuropa_dashboard_agent.settings')

@@ -160,8 +160,7 @@ class NextEuropaDashboardController extends ControllerBase {
    * @return \Drupal\Core\Access\AccessResultAllowed|\Drupal\Core\Access\AccessResultForbidden
    */
   public function access($nexteuropa_dashboard_agent_token) {
-    $token = $this->config('nexteuropa_dashboard_agent.settings')
-      ->get('nexteuropa_dashboard_agent_token');
+    $token = NextEuropaDashboardEncryption::get_token('nexteuropa_dashboard_agent_token');
     if ($token == $nexteuropa_dashboard_agent_token) {
 
       $allowed_ips = $this->config('nexteuropa_dashboard_agent.settings')

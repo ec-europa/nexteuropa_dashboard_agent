@@ -8,6 +8,7 @@
 namespace Drupal\nexteuropa_dashboard_agent\Services;
 
 use Drupal;
+use Drupal\Core\File\FileSystemInterface;
 
 class NextEuropaDashboardEncryption {
 
@@ -38,7 +39,7 @@ class NextEuropaDashboardEncryption {
    * @return string
    */
   public static function encrypt_openssl($plaintext) {
-    $encrypt_token = Drupal::config('\nexteuropa_dashboard_agent.settings')->get('\nexteuropa_dashboard_agent_encrypt_token');
+    $encrypt_token = NextEuropaDashboardEncryption::get_token('nexteuropa_dashboard_agent_encrypt_token');
     $key = hash("SHA256", $encrypt_token, TRUE);
     $plaintext_utf8 = utf8_encode($plaintext);
 
@@ -47,4 +48,48 @@ class NextEuropaDashboardEncryption {
 
     return base64_encode($iv.$cyphertext);
   }
+
+  /**
+   * Stores a given token in private file directory.
+   *
+   * @param string $name
+   *   The name of the token.
+   * @param string $token
+   *   The token to be stored.
+   */
+  public static function set_token($name, $token) {
+    \Drupal::service('file_system')->saveData($token, 'private://' . $name, FileSystemInterface::EXISTS_REPLACE);
+  }
+
+  /**
+   * Retrieves a token stored in private file directory.
+   *
+   * @param string $name
+   *   The name of the token.
+   *
+   * @return string
+   *   'Error-no-token' when the token doesn't exist.
+   */
+  public static function get_token($name) {
+    $real_path = \Drupal::service('file_system')->realpath('private://' . $name);
+    $token = file_get_contents($real_path);
+
+    if ($token !== FALSE) {
+      return $token;
+    }
+    else {
+      return 'Error-no-token';
+    }
+  }
+
+  /**
+   * Deletes a token stored in private file directory.
+   *
+   * @param string $name
+   *   The name of the token.
+   */
+  public static function remove_token($name) {
+    \Drupal::service('file_system')->delete('private://' . $name);
+  }
+
 }
