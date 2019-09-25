@@ -11,8 +11,8 @@
  * Creates a unique set of tokens for this installation.
  */
 function nexteuropa_dashboard_agent_install() {
-  variable_set('nexteuropa_dashboard_agent_token', NextEuropaDashboardAgentEncryption::getToken());
-  variable_set('nexteuropa_dashboard_agent_encrypt_token', NextEuropaDashboardAgentEncryption::getToken());
+  _nexteuropa_dashboard_agent_set_token('nexteuropa_dashboard_agent_token', NextEuropaDashboardAgentEncryption::getToken());
+  _nexteuropa_dashboard_agent_set_token('nexteuropa_dashboard_agent_encrypt_token', NextEuropaDashboardAgentEncryption::getToken());
   variable_set('nexteuropa_dashboard_agent_use_encryption', FALSE);
   variable_set('nexteuropa_dashboard_agent_allowed_ip_range', '');
 }
@@ -23,8 +23,8 @@ function nexteuropa_dashboard_agent_install() {
  * Removes all settings used by the module.
  */
 function nexteuropa_dashboard_agent_uninstall() {
-  variable_del('nexteuropa_dashboard_agent_token');
-  variable_del('nexteuropa_dashboard_agent_encrypt_token');
+  _nexteuropa_dashboard_agent_remove_token('nexteuropa_dashboard_agent_token');
+  _nexteuropa_dashboard_agent_remove_token('nexteuropa_dashboard_agent_encrypt_token');
   variable_del('nexteuropa_dashboard_agent_use_encryption');
   variable_del('nexteuropa_dashboard_agent_allowed_ip_range');
 }

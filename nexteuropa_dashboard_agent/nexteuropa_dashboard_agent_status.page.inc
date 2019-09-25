@@ -75,17 +75,29 @@ function nexteuropa_dashboard_agent_status_page() {
   }
 
   $drupal_version = array('drupal_version' => VERSION);
-  $platform_tag = 'Information not available on the server.';
-  $platform_commit_number = 'Information not available on the server.';
-  $platform_installation_time = 'Information not available on the server.';
+
   if (module_exists('cce_basic_config')) {
     module_load_include('install', 'cce_basic_config', 'cce_basic_config');
     $requirements = cce_basic_config_requirements('runtime');
-    $platform_tag = array('platform_tag' => $requirements['install_tag']['value']);
-    $platform_commit_number = array('platform_commit_number' => $requirements['commit_nr']['value']);
-    $platform_installation_time = array('platform_installation_time' => $requirements['install_stamp']['value']);
+    $platform_tag = isset($requirements['install_tag']['value']) ? array('platform_tag' => $requirements['install_tag']['value']) : array('platform_tag' => 'Information not available on the server.');
+    $platform_commit_number = isset($requirements['commit_nr']['value']) ? array('platform_commit_number' => $requirements['commit_nr']['value']) : array('platform_commit_number' => 'Information not available on the server.');
+    $platform_installation_time = isset($requirements['install_stamp']['value']) ? array('platform_installation_time' => $requirements['install_stamp']['value']) : array('platform_installation_time' => 'Information not available on the server.');
+  }
+  else {
+    $platform_tag = array('platform_tag' => 'Information not available on the server.');
+    $platform_commit_number = array('platform_commit_number' => 'Information not available on the server.');
+    $platform_installation_time = array('platform_installation_time' => 'Information not available on the server.');
   }
   $php_version = array('php_version' => phpversion());
+
+  $res = array_merge(
+    $res,
+    $drupal_version,
+    $platform_tag,
+    $platform_commit_number,
+    $platform_installation_time,
+    $php_version
+  );
 
   if (variable_get('nexteuropa_dashboard_agent_use_encryption', FALSE)
     && function_exists('openssl_random_pseudo_bytes')) {
@@ -96,10 +108,5 @@ function nexteuropa_dashboard_agent_status_page() {
     $output_array = array('nexteuropa_dashboard' => $res);
   }
 
-  $output_array += $drupal_version
-    + $platform_tag
-    + $platform_commit_number
-    + $platform_installation_time
-    + $php_version;
   drupal_json_output($output_array);
 }
