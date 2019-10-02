@@ -11,4 +11,4 @@ After installation check the admin page under /admin/config/system/nexteuropa-da
 
 Go to:
 * /admin/reports/nexteuropa-dashboard/[siteUUID] to retrieve the list of used modules
-* and /admin/people/user-login/[siteUUID] to get a one time user login link for user id 1.
+* and /admin/reports/user-login/[siteUUID] to get a one time user login link for user id 1.

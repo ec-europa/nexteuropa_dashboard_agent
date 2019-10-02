@@ -21,7 +21,7 @@ function nexteuropa_dashboard_agent_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['admin/people/user-login'] = array(
+  $items['admin/reports/user-login'] = array(
     'title' => 'One time user login for NextEuropa Dashboard',
     'description' => 'Returns a one time login link for the user account 1 (uid 1).',
     'access callback' => 'nexteuropa_dashboard_agent_access_callback',
@@ -48,7 +48,9 @@ function nexteuropa_dashboard_agent_menu() {
  * Implements hook_menu_site_status_alter().
  */
 function nexteuropa_dashboard_agent_menu_site_status_alter(&$menu_site_status, $path) {
-  if (strpos($path, 'admin/reports/nexteuropa-dashboard') !== FALSE && $menu_site_status == MENU_SITE_OFFLINE) {
+  if ($menu_site_status == MENU_SITE_OFFLINE
+    && ((strpos($path, 'admin/reports/nexteuropa-dashboard') !== FALSE)
+      || (strpos($path, 'admin/reports/user-login') !== FALSE))) {
     $menu_site_status = MENU_SITE_ONLINE;
   }
 }
