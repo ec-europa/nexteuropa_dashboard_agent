@@ -76,18 +76,27 @@ function nexteuropa_dashboard_agent_status_page() {
 
   $drupal_version = array('drupal_version' => VERSION);
 
+  $platform_tag = array('platform_tag' => NULL);
+  $platform_commit_number = array('platform_commit_number' => NULL);
+  $platform_installation_time = array('platform_installation_time' => NULL);
+
   if (module_exists('cce_basic_config')) {
     module_load_include('install', 'cce_basic_config', 'cce_basic_config');
     $requirements = cce_basic_config_requirements('runtime');
-    $platform_tag = isset($requirements['install_tag']['value']) ? array('platform_tag' => $requirements['install_tag']['value']) : array('platform_tag' => 'Information not available on the server.');
-    $platform_commit_number = isset($requirements['commit_nr']['value']) ? array('platform_commit_number' => $requirements['commit_nr']['value']) : array('platform_commit_number' => 'Information not available on the server.');
-    $platform_installation_time = isset($requirements['install_stamp']['value']) ? array('platform_installation_time' => $requirements['install_stamp']['value']) : array('platform_installation_time' => 'Information not available on the server.');
+    if (isset($requirements['install_tag']['value'])
+      && ($requirements['install_tag']['value'] != 'Information not available on the server.')) {
+      $platform_tag = array('platform_tag' => $requirements['install_tag']['value']);
+    }
+    if (isset($requirements['commit_nr']['value'])
+      && ($requirements['commit_nr']['value'] != 'Information not available on the server.')) {
+      $platform_commit_number = array('platform_commit_number' => $requirements['commit_nr']['value']);
+    }
+    if (isset($requirements['install_stamp']['value'])
+      && ($requirements['install_stamp']['value'] != 'Information not available on the server.')) {
+      $platform_installation_time = array('platform_installation_time' => $requirements['install_stamp']['value']);
+    }
   }
-  else {
-    $platform_tag = array('platform_tag' => 'Information not available on the server.');
-    $platform_commit_number = array('platform_commit_number' => 'Information not available on the server.');
-    $platform_installation_time = array('platform_installation_time' => 'Information not available on the server.');
-  }
+
   $php_version = array('php_version' => phpversion());
 
   $res = array_merge(
