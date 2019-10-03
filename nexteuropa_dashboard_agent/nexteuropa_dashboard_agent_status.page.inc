@@ -74,7 +74,7 @@ function nexteuropa_dashboard_agent_status_page() {
     );
   }
 
-  $drupal_version = array('drupal_version' => VERSION);
+  $drupal_version = array('drupal_version' => 'D' . VERSION);
 
   $platform_tag = array('platform_tag' => NULL);
   $platform_commit_number = array('platform_commit_number' => NULL);
