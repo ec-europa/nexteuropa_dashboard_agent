@@ -137,7 +137,7 @@ class NextEuropaDashboardController extends ControllerBase {
 
     $res = array_merge(
       $res,
-      ['drupal_version' => \DRUPAL::VERSION],
+      ['drupal_version' => 'D' . \DRUPAL::VERSION],
       ['php_version' => phpversion()]);
 
     $use_encryption = $this->config('nexteuropa_dashboard_agent.settings')
