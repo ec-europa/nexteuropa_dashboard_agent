@@ -13,6 +13,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\nexteuropa_dashboard_agent\Services\NextEuropaDashboardEncryption;
+use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -152,6 +153,16 @@ class NextEuropaDashboardController extends ControllerBase {
     else {
       return new JsonResponse(["nexteuropa_dashboard" => $res]);
     }
+  }
+
+  /**
+   * Returns a one time user login url for user id 1.
+   */
+  function uli() {
+    $uid = 1;
+    $account = User::load($uid);
+
+    return new JsonResponse(user_pass_reset_url($account) . '/login');
   }
 
   /**

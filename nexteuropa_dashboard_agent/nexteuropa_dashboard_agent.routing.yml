@@ -5,6 +5,13 @@ nexteuropa_dashboard_agent.status_page:
   requirements:
     _custom_access: '\Drupal\nexteuropa_dashboard_agent\Controller\NextEuropaDashboardController::access'
 
+nexteuropa_dashboard_agent.user_login:
+  path: '/admin/reports/user-login/{nexteuropa_dashboard_agent_token}'
+  defaults:
+    _controller: '\Drupal\nexteuropa_dashboard_agent\Controller\NextEuropaDashboardController::uli'
+  requirements:
+    _custom_access: '\Drupal\nexteuropa_dashboard_agent\Controller\NextEuropaDashboardController::access'
+
 nexteuropa_dashboard_agent.admin_settings:
   path: '/admin/config/system/nexteuropa-dashboard'
   defaults:
