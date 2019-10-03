@@ -194,11 +194,8 @@ class NextEuropaDashboardController extends ControllerBase {
     }
     else {
       Drupal::logger('nexteuropa_dashboard_agent')
-        ->warning("Provided token *** %provided_token *** doesn't match the defined one *** %defined_token ***.",
-          [
-            '%provided_token' => $nexteuropa_dashboard_agent_token,
-            '%defined_token' => $token,
-          ]);
+        ->warning("Provided token *** %provided_token *** doesn't match the defined one.",
+          ['%provided_token' => $nexteuropa_dashboard_agent_token]);
       return AccessResult::forbidden();
     }
   }
