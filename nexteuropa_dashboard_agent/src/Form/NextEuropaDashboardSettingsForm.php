@@ -57,7 +57,7 @@ class NextEuropaDashboardSettingsForm extends ConfigFormBase {
     $form['nexteuropa_dashboard_agent_allowed_ip_range'] = array(
       '#type' => 'textfield',
       '#title' => t('Range of IP allowed to request the services'),
-      '#description' => t('Defines the allowed IPs from where the request can be made.<br>If the variable is empty, then all IPs are allowed.<br>IP-address range is entered in the form of 100.100.100.100 - 100.100.101.150.'),
+      '#description' => t('Defines the allowed IPs from where the request can be made.<br>If the variable is empty, then all requests are blocked.<br>IP-address range is entered in the form of 100.100.100.100 - 100.100.101.150.'),
       '#default_value' => $config->get('nexteuropa_dashboard_agent_allowed_ip_range'),
       '#attributes' => array(
         'placeholder' => t('100.100.100.100 - 100.100.101.150'),
