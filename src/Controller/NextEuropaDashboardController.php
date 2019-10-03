@@ -136,9 +136,22 @@ class NextEuropaDashboardController extends ControllerBase {
       ];
     }
 
+    $platform_tag = array('platform_tag' => NULL);
+    $platform_commit_number = array('platform_commit_number' => NULL);
+    $platform_installation_time = array('platform_installation_time' => NULL);
+
+    $manifest_file = $this->readManifestFile();
+    if ($manifest_file !== FALSE) {
+      $platform_tag = array('platform_tag' => $manifest_file['version']);
+      $platform_commit_number = array('platform_commit_number' => $manifest_file['sha']);
+    }
+
     $res = array_merge(
       $res,
       ['drupal_version' => 'D' . \DRUPAL::VERSION],
+      $platform_tag,
+      $platform_commit_number,
+      $platform_installation_time,
       ['php_version' => phpversion()]);
 
     $use_encryption = $this->config('nexteuropa_dashboard_agent.settings')
@@ -153,6 +166,20 @@ class NextEuropaDashboardController extends ControllerBase {
     else {
       return new JsonResponse(["nexteuropa_dashboard" => $res]);
     }
+  }
+
+  /**
+   * Read and returns the content of manifest.json file.
+   */
+  private function readManifestFile(){
+
+    $filename = '../manifest.json';
+    if (!file_exists($filename) || !is_readable($filename)) return FALSE;
+
+    $file_content = file_get_contents($filename);
+    if ($file_content === FALSE) return FALSE;
+
+    return json_decode($file_content,TRUE );
   }
 
   /**
