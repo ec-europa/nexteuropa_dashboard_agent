@@ -102,11 +102,8 @@ function nexteuropa_dashboard_agent_access_callback($token = FALSE) {
   else {
     watchdog(
       'nexteuropa_dashboard_agent',
-      "Provided token *** %provided_token *** doesn't match the defined one *** %defined_token ***.",
-      array(
-        '%provided_token' => $token,
-        '%defined_token' => $defined_token,
-      ),
+      "Provided token *** %provided_token *** doesn't match the defined one.",
+      array('%provided_token' => $token),
       WATCHDOG_WARNING
     );
     return FALSE;
