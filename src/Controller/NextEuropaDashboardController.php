@@ -13,6 +13,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\nexteuropa_dashboard_agent\Services\NextEuropaDashboardEncryption;
+use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -135,9 +136,22 @@ class NextEuropaDashboardController extends ControllerBase {
       ];
     }
 
+    $platform_tag = array('platform_tag' => NULL);
+    $platform_commit_number = array('platform_commit_number' => NULL);
+    $platform_installation_time = array('platform_installation_time' => NULL);
+
+    $manifest_file = $this->readManifestFile();
+    if ($manifest_file !== FALSE) {
+      $platform_tag = array('platform_tag' => $manifest_file['version']);
+      $platform_commit_number = array('platform_commit_number' => $manifest_file['sha']);
+    }
+
     $res = array_merge(
       $res,
-      ['drupal_version' => \DRUPAL::VERSION],
+      ['drupal_version' => 'D' . \DRUPAL::VERSION],
+      $platform_tag,
+      $platform_commit_number,
+      $platform_installation_time,
       ['php_version' => phpversion()]);
 
     $use_encryption = $this->config('nexteuropa_dashboard_agent.settings')
@@ -152,6 +166,30 @@ class NextEuropaDashboardController extends ControllerBase {
     else {
       return new JsonResponse(["nexteuropa_dashboard" => $res]);
     }
+  }
+
+  /**
+   * Read and returns the content of manifest.json file.
+   */
+  private function readManifestFile(){
+
+    $filename = '../manifest.json';
+    if (!file_exists($filename) || !is_readable($filename)) return FALSE;
+
+    $file_content = file_get_contents($filename);
+    if ($file_content === FALSE) return FALSE;
+
+    return json_decode($file_content,TRUE );
+  }
+
+  /**
+   * Returns a one time user login url for user id 1.
+   */
+  function uli() {
+    $uid = 1;
+    $account = User::load($uid);
+
+    return new JsonResponse(user_pass_reset_url($account) . '/login');
   }
 
   /**
@@ -194,11 +232,8 @@ class NextEuropaDashboardController extends ControllerBase {
     }
     else {
       Drupal::logger('nexteuropa_dashboard_agent')
-        ->warning("Provided token *** %provided_token *** doesn't match the defined one *** %defined_token ***.",
-          [
-            '%provided_token' => $nexteuropa_dashboard_agent_token,
-            '%defined_token' => $token,
-          ]);
+        ->warning("Provided token *** %provided_token *** doesn't match the defined one.",
+          ['%provided_token' => $nexteuropa_dashboard_agent_token]);
       return AccessResult::forbidden();
     }
   }
