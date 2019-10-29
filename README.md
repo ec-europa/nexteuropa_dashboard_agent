@@ -10,8 +10,9 @@ After installation check the admin page under /admin/config/system/nexteuropa-da
 * You can set a range of allowed IP's.
 
 Go to:
-* /admin/reports/nexteuropa-dashboard/[siteUUID] to retrieve the list of used modules
-* and /admin/reports/user-login/[siteUUID] to get a one time user login link for user id 1.
+* /admin/reports/nexteuropa-dashboard/ to retrieve the list of used modules.
+* and /admin/reports/user-login/ to get a one time user login link for user id 1.
+For both request, a parameter called NETOKEN must be added in HTTP Request header with as value the [siteUUID].
 ~~~~
 ~~~~
 #### Disclaimer
