@@ -15,7 +15,6 @@ function nexteuropa_dashboard_agent_menu() {
     'title' => 'Report for NextEuropa Dashboard',
     'description' => 'Output of the NextEuropa Dashboard agent module',
     'access callback' => 'nexteuropa_dashboard_agent_access_callback',
-    'access arguments' => array(3),
     'page callback' => 'nexteuropa_dashboard_agent_status_page',
     'file' => 'nexteuropa_dashboard_agent_status.page.inc',
     'type' => MENU_CALLBACK,
@@ -25,7 +24,6 @@ function nexteuropa_dashboard_agent_menu() {
     'title' => 'One time user login for NextEuropa Dashboard',
     'description' => 'Returns a one time login link for the user account 1 (uid 1).',
     'access callback' => 'nexteuropa_dashboard_agent_access_callback',
-    'access arguments' => array(3),
     'page callback' => 'nexteuropa_dashboard_agent_uli_page',
     'file' => 'nexteuropa_dashboard_agent_uli.page.inc',
     'type' => MENU_CALLBACK,
@@ -60,50 +58,61 @@ function nexteuropa_dashboard_agent_menu_site_status_alter(&$menu_site_status, $
  *
  * @see nexteuropa_dashboard_agent_menu()
  */
-function nexteuropa_dashboard_agent_access_callback($token = FALSE) {
+function nexteuropa_dashboard_agent_access_callback() {
+  if (!empty($_SERVER['HTTP_NETOKEN'])) {
 
-  $defined_token = _nexteuropa_dashboard_agent_get_token('nexteuropa_dashboard_agent_token');
-  if ($token == $defined_token) {
+    $defined_token = _nexteuropa_dashboard_agent_get_token('nexteuropa_dashboard_agent_token');
+    if ($_SERVER['HTTP_NETOKEN'] == $defined_token) {
 
-    $allowed_ips = variable_get('nexteuropa_dashboard_agent_allowed_ip_range', NULL);
-    if (empty($allowed_ips)) {
-      watchdog(
-        'nexteuropa_dashboard_agent',
-        "Variable with allowed IP range isn't set. Request blocked.",
-        array(),
-        WATCHDOG_WARNING
-      );
-      return FALSE;
-    }
-    else {
-      $allowed_ips = preg_replace('/\s+/', '', $allowed_ips);
-      $allowed_ip_array = explode('-', $allowed_ips);
-      list($lower, $upper) = $allowed_ip_array;
-      $lower_dec = (float) sprintf("%u", ip2long($lower));
-      $upper_dec = (float) sprintf("%u", ip2long($upper));
-      $ip_dec = (float) sprintf("%u", ip2long(ip_address()));
-      if (($ip_dec >= $lower_dec) && ($ip_dec <= $upper_dec)) {
-        return TRUE;
-      }
-      else {
+      $allowed_ips = variable_get('nexteuropa_dashboard_agent_allowed_ip_range', NULL);
+      if (empty($allowed_ips)) {
         watchdog(
           'nexteuropa_dashboard_agent',
-          "Requester IP *** %requester_ip *** is not allowed. Should be in the range *** %allowed_ips ***.",
-          array(
-            '%requester_ip' => ip_address(),
-            '%allowed_ips' => $allowed_ips,
-          ),
+          "Variable with allowed IP range isn't set. Request blocked.",
+          array(),
           WATCHDOG_WARNING
         );
         return FALSE;
       }
+      else {
+        $allowed_ips = preg_replace('/\s+/', '', $allowed_ips);
+        $allowed_ip_array = explode('-', $allowed_ips);
+        list($lower, $upper) = $allowed_ip_array;
+        $lower_dec = (float) sprintf("%u", ip2long($lower));
+        $upper_dec = (float) sprintf("%u", ip2long($upper));
+        $ip_dec = (float) sprintf("%u", ip2long(ip_address()));
+        if (($ip_dec >= $lower_dec) && ($ip_dec <= $upper_dec)) {
+          return TRUE;
+        }
+        else {
+          watchdog(
+            'nexteuropa_dashboard_agent',
+            "Requester IP *** %requester_ip *** is not allowed. Should be in the range *** %allowed_ips ***.",
+            array(
+              '%requester_ip' => ip_address(),
+              '%allowed_ips' => $allowed_ips,
+            ),
+            WATCHDOG_WARNING
+          );
+          return FALSE;
+        }
+      }
+    }
+    else {
+      watchdog(
+        'nexteuropa_dashboard_agent',
+        "Provided token *** %provided_token *** doesn't match the defined one.",
+        array('%provided_token' => $_SERVER['HTTP_NETOKEN']),
+        WATCHDOG_WARNING
+      );
+      return FALSE;
     }
   }
   else {
     watchdog(
       'nexteuropa_dashboard_agent',
-      "Provided token *** %provided_token *** doesn't match the defined one.",
-      array('%provided_token' => $token),
+      "No access token provided.",
+      array(),
       WATCHDOG_WARNING
     );
     return FALSE;
