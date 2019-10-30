@@ -11,8 +11,10 @@ After installation check the admin page under /admin/config/system/nexteuropa-da
 
 Go to:
 * /admin/reports/nexteuropa-dashboard/ to retrieve the list of used modules.
-* and /admin/reports/user-login/ to get a one time user login link for user id 1.
-For both request, a parameter called NETOKEN must be added in HTTP Request header with as value the [siteUUID].
+* /admin/reports/user-login/super_admin to get a one time user login link for user id 1.
+* /admin/reports/user-login/user_administrator to get a one time user login link for user user_administrator.
+
+For these requests, a parameter called NETOKEN must be added in HTTP Request header with as value the [siteUUID].
 ~~~~
 ~~~~
 #### Disclaimer
