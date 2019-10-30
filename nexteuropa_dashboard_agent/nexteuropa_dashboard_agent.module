@@ -22,9 +22,10 @@ function nexteuropa_dashboard_agent_menu() {
 
   $items['admin/reports/user-login'] = array(
     'title' => 'One time user login for NextEuropa Dashboard',
-    'description' => 'Returns a one time login link for the user account 1 (uid 1).',
+    'description' => 'Returns a one time login link for the user account 1 (uid 1) or user "user_administrator".',
     'access callback' => 'nexteuropa_dashboard_agent_access_callback',
     'page callback' => 'nexteuropa_dashboard_agent_uli_page',
+    'page arguments' => array(3),
     'file' => 'nexteuropa_dashboard_agent_uli.page.inc',
     'type' => MENU_CALLBACK,
   );
