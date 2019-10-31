@@ -184,8 +184,16 @@ class NextEuropaDashboardController extends ControllerBase {
 
   /**
    * Returns a one time user login url for user id 1.
+   *
+   * @param $ne_dashboard_agent_req_for_user
+   *
+   * @return JsonResponse
    */
-  function uli() {
+  function uli($ne_dashboard_agent_req_for_user = FALSE) {
+    // The param $ne_dashboard_agent_req_for_user has been added
+    // to simplify the dashboard implementation
+    // but for D8 a one time login link for user id 1 is always returned.
+    // See https://webgate.ec.europa.eu/CITnet/jira/browse/DASH-233
     $uid = 1;
     $account = User::load($uid);
 
