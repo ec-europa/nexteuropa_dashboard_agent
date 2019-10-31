@@ -193,47 +193,53 @@ class NextEuropaDashboardController extends ControllerBase {
   }
 
   /**
-   * @param $nexteuropa_dashboard_agent_token
-   *
    * @return \Drupal\Core\Access\AccessResultAllowed|\Drupal\Core\Access\AccessResultForbidden
    */
-  public function access($nexteuropa_dashboard_agent_token) {
-    $token = NextEuropaDashboardEncryption::get_token('nexteuropa_dashboard_agent_token');
-    if ($token == $nexteuropa_dashboard_agent_token) {
+  public function access() {
+    $nexteuropa_dashboard_agent_token = \Drupal::request()->headers->get('netoken');
+    if (!empty($nexteuropa_dashboard_agent_token)) {
+      $defined_token = NextEuropaDashboardEncryption::get_token('nexteuropa_dashboard_agent_token');
+      if ($defined_token == $nexteuropa_dashboard_agent_token) {
 
-      $allowed_ips = $this->config('nexteuropa_dashboard_agent.settings')
-        ->get('nexteuropa_dashboard_agent_allowed_ip_range');
-      if (empty($allowed_ips)) {
-        Drupal::logger('nexteuropa_dashboard_agent')
-          ->warning("Variable with allowed IP range isn't set. Request blocked.");
-        return AccessResult::forbidden();
-      }
-      else {
-        $allowed_ips = preg_replace('/\s+/', '', $allowed_ips);
-        $allowed_ip_array = explode('-', $allowed_ips);
-        list($lower, $upper) = $allowed_ip_array;
-        $lower_dec = (float) sprintf("%u", ip2long($lower));
-        $upper_dec = (float) sprintf("%u", ip2long($upper));
-        $ip_dec = (float) sprintf("%u", ip2long(Drupal::request()
-          ->getClientIp()));
-        if (($ip_dec >= $lower_dec) && ($ip_dec <= $upper_dec)) {
-          return AccessResult::allowed();
-        }
-        else {
+        $allowed_ips = $this->config('nexteuropa_dashboard_agent.settings')
+          ->get('nexteuropa_dashboard_agent_allowed_ip_range');
+        if (empty($allowed_ips)) {
           Drupal::logger('nexteuropa_dashboard_agent')
-            ->warning("Requester IP *** %requester_ip *** is not allowed. Should be in the range *** %allowed_ips ***.",
-              [
-                '%requester_ip' => Drupal::request()->getClientIp(),
-                '%allowed_ips' => $allowed_ips,
-              ]);
+            ->warning("Variable with allowed IP range isn't set. Request blocked.");
           return AccessResult::forbidden();
         }
+        else {
+          $allowed_ips = preg_replace('/\s+/', '', $allowed_ips);
+          $allowed_ip_array = explode('-', $allowed_ips);
+          list($lower, $upper) = $allowed_ip_array;
+          $lower_dec = (float) sprintf("%u", ip2long($lower));
+          $upper_dec = (float) sprintf("%u", ip2long($upper));
+          $ip_dec = (float) sprintf("%u", ip2long(Drupal::request()
+            ->getClientIp()));
+          if (($ip_dec >= $lower_dec) && ($ip_dec <= $upper_dec)) {
+            return AccessResult::allowed();
+          }
+          else {
+            Drupal::logger('nexteuropa_dashboard_agent')
+              ->warning("Requester IP *** %requester_ip *** is not allowed. Should be in the range *** %allowed_ips ***.",
+                [
+                  '%requester_ip' => Drupal::request()->getClientIp(),
+                  '%allowed_ips' => $allowed_ips,
+                ]);
+            return AccessResult::forbidden();
+          }
+        }
+      }
+      else {
+        Drupal::logger('nexteuropa_dashboard_agent')
+          ->warning("Provided token *** %provided_token *** doesn't match the defined one.",
+            ['%provided_token' => $nexteuropa_dashboard_agent_token]);
+        return AccessResult::forbidden();
       }
     }
     else {
       Drupal::logger('nexteuropa_dashboard_agent')
-        ->warning("Provided token *** %provided_token *** doesn't match the defined one.",
-          ['%provided_token' => $nexteuropa_dashboard_agent_token]);
+        ->warning("No access token provided.", []);
       return AccessResult::forbidden();
     }
   }
