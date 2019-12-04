@@ -62,8 +62,10 @@ function nexteuropa_dashboard_agent_menu_site_status_alter(&$menu_site_status, $
 function nexteuropa_dashboard_agent_access_callback() {
   if (!empty($_SERVER['HTTP_NETOKEN'])) {
 
-    $defined_token = _nexteuropa_dashboard_agent_get_token('nexteuropa_dashboard_agent_token');
-    if ($_SERVER['HTTP_NETOKEN'] == $defined_token) {
+    $provided_salt = drupal_substr($_SERVER['HTTP_NETOKEN'], 0, 4);
+    $provided_hash = drupal_substr($_SERVER['HTTP_NETOKEN'], 4);
+    $hash_of_temporary_token = _nexteuropa_dashboard_agent_get_hash_of_temporary_token($provided_salt);
+    if ($provided_hash == $hash_of_temporary_token) {
 
       $allowed_ips = variable_get('nexteuropa_dashboard_agent_allowed_ip_range', NULL);
       if (empty($allowed_ips)) {
@@ -102,8 +104,8 @@ function nexteuropa_dashboard_agent_access_callback() {
     else {
       watchdog(
         'nexteuropa_dashboard_agent',
-        "Provided token *** %provided_token *** doesn't match the defined one.",
-        array('%provided_token' => $_SERVER['HTTP_NETOKEN']),
+        "Provided hash *** %provided_hash *** doesn't match the generated one.",
+        array('%provided_hash' => $provided_hash),
         WATCHDOG_WARNING
       );
       return FALSE;
@@ -161,4 +163,19 @@ function _nexteuropa_dashboard_agent_get_token($name) {
  */
 function _nexteuropa_dashboard_agent_remove_token($name) {
   file_unmanaged_delete('private://' . $name);
+}
+
+/**
+ * Generates a cryptographic hash using a temporary string composed with the passed salt, a shared token and the date.
+ *
+ * @param string $random_salt
+ *   The random salt to use to compose the temporary token.
+ *
+ * @return string
+ *   The cryptographic hash from the temporary token.
+ */
+function _nexteuropa_dashboard_agent_get_hash_of_temporary_token($random_salt) {
+  $defined_token = _nexteuropa_dashboard_agent_get_token('nexteuropa_dashboard_agent_token');
+  $temporary_token = $random_salt . $defined_token . date('Ymd');
+  return hash('SHA512', $temporary_token);
 }
