@@ -206,8 +206,11 @@ class NextEuropaDashboardController extends ControllerBase {
   public function access() {
     $nexteuropa_dashboard_agent_token = \Drupal::request()->headers->get('netoken');
     if (!empty($nexteuropa_dashboard_agent_token)) {
-      $defined_token = NextEuropaDashboardEncryption::get_token('nexteuropa_dashboard_agent_token');
-      if ($defined_token == $nexteuropa_dashboard_agent_token) {
+
+      $provided_salt = mb_substr($_SERVER['HTTP_NETOKEN'], 0, 4);
+      $provided_hash = mb_substr($_SERVER['HTTP_NETOKEN'], 4);
+      $hash_of_temporary_token = NextEuropaDashboardEncryption::get_hash_of_temporary_token($provided_salt);
+      if ($provided_hash == $hash_of_temporary_token) {
 
         $allowed_ips = $this->config('nexteuropa_dashboard_agent.settings')
           ->get('nexteuropa_dashboard_agent_allowed_ip_range');
@@ -240,8 +243,8 @@ class NextEuropaDashboardController extends ControllerBase {
       }
       else {
         Drupal::logger('nexteuropa_dashboard_agent')
-          ->warning("Provided token *** %provided_token *** doesn't match the defined one.",
-            ['%provided_token' => $nexteuropa_dashboard_agent_token]);
+          ->warning("Provided hash *** %provided_hash *** doesn't match the generated one.",
+            ['%provided_hash' => $provided_hash]);
         return AccessResult::forbidden();
       }
     }

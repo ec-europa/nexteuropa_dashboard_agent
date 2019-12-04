@@ -92,4 +92,19 @@ class NextEuropaDashboardEncryption {
     \Drupal::service('file_system')->delete('private://' . $name);
   }
 
+  /**
+   * Generates a cryptographic hash using a temporary string composed with the passed salt, a shared token and the date.
+   *
+   * @param string $random_salt
+   *   The random salt to use to compose the temporary token.
+   *
+   * @return string
+   *   The cryptographic hash from the temporary token.
+   */
+  public static function get_hash_of_temporary_token($random_salt) {
+    $defined_token = NextEuropaDashboardEncryption::get_token('nexteuropa_dashboard_agent_token');
+    $temporary_token = $random_salt . $defined_token . date('Ymd');
+    return hash('SHA512', $temporary_token);
+  }
+
 }
