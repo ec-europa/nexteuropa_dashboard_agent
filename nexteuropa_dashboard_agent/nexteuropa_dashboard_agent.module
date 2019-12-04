@@ -62,8 +62,8 @@ function nexteuropa_dashboard_agent_menu_site_status_alter(&$menu_site_status, $
 function nexteuropa_dashboard_agent_access_callback() {
   if (!empty($_SERVER['HTTP_NETOKEN'])) {
 
-    $provided_salt = substr($_SERVER['HTTP_NETOKEN'], 0, 4);
-    $provided_hash = substr($_SERVER['HTTP_NETOKEN'], 4);
+    $provided_salt = drupal_substr($_SERVER['HTTP_NETOKEN'], 0, 4);
+    $provided_hash = drupal_substr($_SERVER['HTTP_NETOKEN'], 4);
     $hash_of_temporary_token = _nexteuropa_dashboard_agent_get_hash_of_temporary_token($provided_salt);
     if ($provided_hash == $hash_of_temporary_token) {
 
