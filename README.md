@@ -14,7 +14,7 @@ Go to:
 * /admin/reports/user-login/super_admin to get a one time user login link for user id 1.
 * /admin/reports/user-login/user_administrator to get a one time user login link for user user_administrator.
 
-For these requests, a parameter called NETOKEN must be added in HTTP Request header with as value the [siteUUID].
+For these requests, a parameter called NETOKEN is expected in HTTP Request header for the authentication.
 ~~~~
 ~~~~
 #### Disclaimer
