@@ -103,7 +103,7 @@ class NextEuropaDashboardEncryption {
    */
   public static function get_hash_of_temporary_token($random_salt) {
     $defined_token = NextEuropaDashboardEncryption::get_token('nexteuropa_dashboard_agent_token');
-    $temporary_token = $random_salt . $defined_token . date('Ymd');
+    $temporary_token = $random_salt . $defined_token . \Drupal::service('date.formatter')->format(time(), 'custom', 'Ymd');
     return hash('SHA512', $temporary_token);
   }
 
