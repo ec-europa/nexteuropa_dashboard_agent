@@ -1,0 +1,5 @@
+services:
+  nexteuropa_dashboard_agent.commands:
+    class: \Drupal\nexteuropa_dashboard_agent\Commands\NextEuropaDashboardAgentCommands
+    tags:
+      - { name: drush.command }

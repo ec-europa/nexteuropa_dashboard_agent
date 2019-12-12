@@ -10,5 +10,13 @@ After installation check the admin page under /admin/config/system/nexteuropa-da
 * You can set a range of allowed IP's.
 
 Go to:
-* /admin/reports/nexteuropa-dashboard/[siteUUID] to retrieve the list of used modules
-* and /admin/people/user-login/[siteUUID] to get a one time user login link for user id 1.
+* /admin/reports/nexteuropa-dashboard/ to retrieve the list of used modules.
+* /admin/reports/user-login/super_admin to get a one time user login link for user id 1.
+* /admin/reports/user-login/user_administrator to get a one time user login link for user user_administrator.
+
+For these requests, a parameter called NETOKEN is expected in HTTP Request header for the authentication.
+~~~~
+~~~~
+#### Disclaimer
+This module is a fork of contrib module System Status. See https://www.drupal.org/project/system_status
+Some changes were done to fit EC requirements and new features were added.

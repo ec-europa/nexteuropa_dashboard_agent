@@ -1,0 +1,8 @@
+nexteuropa_dashboard_agent.settings:
+  type: config_object
+  label: 'NextEuropa Dashboard settings'
+  mapping:
+    nexteuropa_dashboard_agent_use_encryption:
+      type: boolean
+    nexteuropa_dashboard_agent_allowed_ip_range:
+      type: string

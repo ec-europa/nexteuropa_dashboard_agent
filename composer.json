@@ -1,0 +1,7 @@
+{
+  "name": "ec-europa/nexteuropa_dashboard_agent",
+  "description": "Agent used from the NextEuropa Dashboard. Provides an overview of all the used modules and a way to get a one time login link.",
+  "type": "drupal-module",
+  "homepage": "https://github.com/ec-europa/nexteuropa_dashboard_agent/tree/8.x-1.x",
+  "require": {}
+}
