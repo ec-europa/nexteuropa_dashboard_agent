@@ -45,6 +45,7 @@ function nexteuropa_dashboard_agent_install() {
  * Removes all settings used by the module.
  */
 function nexteuropa_dashboard_agent_uninstall() {
+  module_load_include('module', 'nexteuropa_dashboard_agent', 'nexteuropa_dashboard_agent');
   _nexteuropa_dashboard_agent_remove_token('nexteuropa_dashboard_agent_token');
   _nexteuropa_dashboard_agent_remove_token('nexteuropa_dashboard_agent_encrypt_token');
   variable_del('nexteuropa_dashboard_agent_use_encryption');
