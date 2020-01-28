@@ -39,11 +39,13 @@ function nexteuropa_dashboard_agent_form($form, &$form_state) {
 
   $form['nexteuropa_dashboard_agent_allowed_ip_range'] = array(
     '#type' => 'textfield',
-    '#title' => t('Range of IP allowed to request the services'),
-    '#description' => t('Defines the allowed IPs from where the request can be made.<br>If the variable is empty, then all requests are blocked.<br>IP-address range is entered in the form of 100.100.100.100 - 100.100.101.150.'),
+    '#title' => t('List of IPs allowed to request the services'),
+    '#description' => t('Defines the allowed IPs from where the request can be made.<br>If the variable is empty, then all requests are blocked.<br>IP-address range is entered in the form of 100.100.100.100 - 100.100.101.150, 158.167.213.96, 158.167.217.43, 158.167.315.02 - 158.167.315.80'),
     '#default_value' => variable_get('nexteuropa_dashboard_agent_allowed_ip_range'),
+    '#size' => 180,
+    '#maxlength' => 200,
     '#attributes' => array(
-      'placeholder' => t('100.100.100.100 - 100.100.101.150'),
+      'placeholder' => t('100.100.100.100 - 100.100.101.150, 158.167.213.96, 158.167.217.43, 158.167.315.02 - 158.167.315.80'),
     ),
   );
 
