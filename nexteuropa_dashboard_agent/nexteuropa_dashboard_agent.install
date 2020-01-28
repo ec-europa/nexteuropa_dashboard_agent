@@ -16,11 +16,11 @@ function nexteuropa_dashboard_agent_requirements($phase) {
   );
 
   if (empty(variable_get('file_private_path'))) {
-    $requirements['nexteuropa_dashboard_agent_private_file_system']['descritpion'] = 'Private file system is NOT set';
+    $requirements['nexteuropa_dashboard_agent_private_file_system']['description'] = 'Private file system is NOT set';
     $requirements['nexteuropa_dashboard_agent_private_file_system']['severity'] = REQUIREMENT_ERROR;
   }
   else {
-    $requirements['nexteuropa_dashboard_agent_private_file_system']['descritpion'] = 'Private file system is set';
+    $requirements['nexteuropa_dashboard_agent_private_file_system']['description'] = 'Private file system is set';
     $requirements['nexteuropa_dashboard_agent_private_file_system']['severity'] = REQUIREMENT_OK;
   }
 
