@@ -172,7 +172,10 @@ function _nexteuropa_dashboard_agent_remove_token($name) {
 }
 
 /**
- * Generates a cryptographic hash using a temporary string composed with the passed salt, a shared token and the date.
+ * Generates a cryptographic hash using a temporary string.
+ *
+ * The temporary string is composed with the passed salt, a shared token
+ * and the current date.
  *
  * @param string $random_salt
  *   The random salt to use to compose the temporary token.
