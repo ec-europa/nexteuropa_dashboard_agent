@@ -97,7 +97,7 @@ function nexteuropa_dashboard_agent_access_callback() {
         // this means current IP is not allowed.
         watchdog(
           'nexteuropa_dashboard_agent',
-          "Requester IP *** %requester_ip *** is not allowed. Should be in the range *** %allowed_ips ***.",
+          "Requester IP *** %requester_ip *** is not allowed. Should be in the list *** %allowed_ips ***.",
           array(
             '%requester_ip' => ip_address(),
             '%allowed_ips' => $allowed_ips,
