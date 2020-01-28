@@ -85,7 +85,7 @@ function nexteuropa_dashboard_agent_access_callback() {
           $allowed_ip_array = explode('-', $allowed_ip);
           list($lower, $upper) = $allowed_ip_array;
           $lower_dec = (float) sprintf("%u", ip2long($lower));
-          $upper_dec = (float) sprintf("%u", ip2long($upper));
+          $upper_dec = (!empty($upper)) ? (float) sprintf("%u", ip2long($upper)) : $lower_dec;
           $ip_dec = (float) sprintf("%u", ip2long(ip_address()));
           if (($ip_dec >= $lower_dec) && ($ip_dec <= $upper_dec)) {
             // Current IP is in the list of allowed IPs.
