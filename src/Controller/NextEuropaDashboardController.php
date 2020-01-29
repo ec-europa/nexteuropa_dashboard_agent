@@ -221,24 +221,30 @@ class NextEuropaDashboardController extends ControllerBase {
         }
         else {
           $allowed_ips = preg_replace('/\s+/', '', $allowed_ips);
-          $allowed_ip_array = explode('-', $allowed_ips);
-          list($lower, $upper) = $allowed_ip_array;
-          $lower_dec = (float) sprintf("%u", ip2long($lower));
-          $upper_dec = (float) sprintf("%u", ip2long($upper));
-          $ip_dec = (float) sprintf("%u", ip2long(Drupal::request()
-            ->getClientIp()));
-          if (($ip_dec >= $lower_dec) && ($ip_dec <= $upper_dec)) {
-            return AccessResult::allowed();
+          $allowed_ip_list = explode(',', $allowed_ips);
+          // Compare current IP with the list of allowed IPs.
+          foreach ($allowed_ip_list as $allowed_ip) {
+            $allowed_ip_array = explode('-', $allowed_ip);
+            list($lower, $upper) = $allowed_ip_array;
+            $lower_dec = (float) sprintf("%u", ip2long($lower));
+            $upper_dec = (!empty($upper)) ? (float) sprintf("%u", ip2long($upper)) : $lower_dec;
+            $ip_dec = (float) sprintf("%u", ip2long(Drupal::request()
+              ->getClientIp()));
+            if (($ip_dec >= $lower_dec) && ($ip_dec <= $upper_dec)) {
+              // Current IP is in the list of allowed IPs.
+              // Allow the access.
+              return AccessResult::allowed();
+            }
           }
-          else {
-            Drupal::logger('nexteuropa_dashboard_agent')
-              ->warning("Requester IP *** %requester_ip *** is not allowed. Should be in the range *** %allowed_ips ***.",
-                [
-                  '%requester_ip' => Drupal::request()->getClientIp(),
-                  '%allowed_ips' => $allowed_ips,
-                ]);
-            return AccessResult::forbidden();
-          }
+          // If the execution reach this line,
+          // this means current IP is not allowed.
+          Drupal::logger('nexteuropa_dashboard_agent')
+            ->warning("Requester IP *** %requester_ip *** is not allowed. Should be in the list *** %allowed_ips ***.",
+              [
+                '%requester_ip' => Drupal::request()->getClientIp(),
+                '%allowed_ips' => $allowed_ips,
+              ]);
+          return AccessResult::forbidden();
         }
       }
       else {

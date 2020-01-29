@@ -5,7 +5,29 @@
  * Installation file for nexteuropa_dashboard_agent.
  */
 
+use Drupal\Core\Site\Settings;
 use Drupal\nexteuropa_dashboard_agent\Services\NextEuropaDashboardEncryption;
+
+/**
+ * Implements hook_requirements().
+ */
+function nexteuropa_dashboard_agent_requirements($phase) {
+  $requirements = array();
+  $requirements['nexteuropa_dashboard_agent_private_file_system'] = array(
+    'title' => t('Nexteuropa dashboard agent: Check private file system.'),
+  );
+
+  if (Settings::get('file_private_path')) {
+    $requirements['nexteuropa_dashboard_agent_private_file_system']['description'] = 'Private file system is set';
+    $requirements['nexteuropa_dashboard_agent_private_file_system']['severity'] = REQUIREMENT_OK;
+  }
+  else {
+    $requirements['nexteuropa_dashboard_agent_private_file_system']['description'] = 'Private file system is NOT set';
+    $requirements['nexteuropa_dashboard_agent_private_file_system']['severity'] = REQUIREMENT_ERROR;
+  }
+
+  return $requirements;
+}
 
 /**
  * Implements hook_install().
