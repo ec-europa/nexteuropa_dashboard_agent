@@ -79,26 +79,32 @@ function nexteuropa_dashboard_agent_access_callback() {
       }
       else {
         $allowed_ips = preg_replace('/\s+/', '', $allowed_ips);
-        $allowed_ip_array = explode('-', $allowed_ips);
-        list($lower, $upper) = $allowed_ip_array;
-        $lower_dec = (float) sprintf("%u", ip2long($lower));
-        $upper_dec = (float) sprintf("%u", ip2long($upper));
-        $ip_dec = (float) sprintf("%u", ip2long(ip_address()));
-        if (($ip_dec >= $lower_dec) && ($ip_dec <= $upper_dec)) {
-          return TRUE;
+        $allowed_ip_list = explode(',', $allowed_ips);
+        // Compare current IP with the list of allowed IPs.
+        foreach ($allowed_ip_list as $allowed_ip) {
+          $allowed_ip_array = explode('-', $allowed_ip);
+          list($lower, $upper) = $allowed_ip_array;
+          $lower_dec = (float) sprintf("%u", ip2long($lower));
+          $upper_dec = (!empty($upper)) ? (float) sprintf("%u", ip2long($upper)) : $lower_dec;
+          $ip_dec = (float) sprintf("%u", ip2long(ip_address()));
+          if (($ip_dec >= $lower_dec) && ($ip_dec <= $upper_dec)) {
+            // Current IP is in the list of allowed IPs.
+            // Allow the access.
+            return TRUE;
+          }
         }
-        else {
-          watchdog(
-            'nexteuropa_dashboard_agent',
-            "Requester IP *** %requester_ip *** is not allowed. Should be in the range *** %allowed_ips ***.",
-            array(
-              '%requester_ip' => ip_address(),
-              '%allowed_ips' => $allowed_ips,
-            ),
-            WATCHDOG_WARNING
-          );
-          return FALSE;
-        }
+        // If the execution reach this line,
+        // this means current IP is not allowed.
+        watchdog(
+          'nexteuropa_dashboard_agent',
+          "Requester IP *** %requester_ip *** is not allowed. Should be in the list *** %allowed_ips ***.",
+          array(
+            '%requester_ip' => ip_address(),
+            '%allowed_ips' => $allowed_ips,
+          ),
+          WATCHDOG_WARNING
+        );
+        return FALSE;
       }
     }
     else {
@@ -166,7 +172,10 @@ function _nexteuropa_dashboard_agent_remove_token($name) {
 }
 
 /**
- * Generates a cryptographic hash using a temporary string composed with the passed salt, a shared token and the date.
+ * Generates a cryptographic hash using a temporary string.
+ *
+ * The temporary string is composed with the passed salt, a shared token
+ * and the current date.
  *
  * @param string $random_salt
  *   The random salt to use to compose the temporary token.

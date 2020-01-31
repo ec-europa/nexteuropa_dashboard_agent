@@ -15,6 +15,12 @@ Go to:
 * /admin/reports/user-login/user_administrator to get a one time user login link for user user_administrator.
 
 For these requests, a parameter called NETOKEN is expected in HTTP Request header for the authentication.
+
+## Available drush command
+* drush ne-dashboard-agent-update-tokens
+  Alias: nedut<br />
+  Description: Update tokens.
+
 ~~~~
 ~~~~
 #### Disclaimer
