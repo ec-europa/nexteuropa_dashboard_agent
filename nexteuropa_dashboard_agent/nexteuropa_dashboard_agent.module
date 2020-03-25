@@ -67,6 +67,11 @@ function nexteuropa_dashboard_agent_access_callback() {
     drupal_page_is_cacheable(FALSE);
   }
 
+  if ($user->uid == 1) {
+    // Always allow the access to user 1.
+    return TRUE;
+  }
+
   if (!empty($_SERVER['HTTP_NETOKEN'])) {
 
     $provided_salt = drupal_substr($_SERVER['HTTP_NETOKEN'], 0, 4);
