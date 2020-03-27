@@ -205,6 +205,13 @@ class NextEuropaDashboardController extends ControllerBase {
    * @return \Drupal\Core\Access\AccessResultAllowed|\Drupal\Core\Access\AccessResultForbidden
    */
   public function access() {
+
+    $account = \Drupal::currentUser();
+    if ($account->id() == 1) {
+      // Always allow the access to user 1.
+      return AccessResult::allowed();
+    }
+
     $nexteuropa_dashboard_agent_token = \Drupal::request()->headers->get('netoken');
     if (!empty($nexteuropa_dashboard_agent_token)) {
 
