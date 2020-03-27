@@ -28,7 +28,7 @@ function nexteuropa_dashboard_agent_status_page() {
       'status' => $theme->status,
       'schema_version' => $theme->schema_version,
       'location' => $theme->filename,
-      'base_themes' => array_keys($theme->base_themes),
+      'base_themes' => !empty($theme->base_themes) ? array_keys($theme->base_themes) : array(),
     );
   }
 
