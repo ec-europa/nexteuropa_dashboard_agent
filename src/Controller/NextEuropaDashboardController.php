@@ -133,7 +133,7 @@ class NextEuropaDashboardController extends ControllerBase {
         'version' => isset($theme->info['version']) ? $theme->info['version'] : NULL,
         'status' => $theme->status,
         'location' => $theme->getPathname(),
-        'base_themes' => array_keys($theme->base_themes),
+        'base_themes' => !empty($theme->base_themes) ? array_keys($theme->base_themes) : [],
       ];
     }
 
