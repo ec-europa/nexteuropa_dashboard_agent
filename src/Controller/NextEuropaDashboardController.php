@@ -12,6 +12,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Session\AccountProxy;
 use Drupal\nexteuropa_dashboard_agent\Services\NextEuropaDashboardEncryption;
 use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -45,23 +46,33 @@ class NextEuropaDashboardController extends ControllerBase {
   protected $encrypt;
 
   /**
+   * Drupal\Core\Session\AccountProxy definition.
+   *
+   * @var \Drupal\Core\Session\AccountProxy
+   */
+  protected $currentUser;
+
+  /**
    * NextEuropaDashboardController constructor.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    * @param \Drupal\nexteuropa_dashboard_agent\Services\NextEuropaDashboardEncryption $encrypt
+   * @param \Drupal\Core\Session\AccountProxy $current_user
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, NextEuropaDashboardEncryption $encrypt) {
+  public function __construct(ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, NextEuropaDashboardEncryption $encrypt, AccountProxy $current_user) {
     $this->module_handler = $module_handler;
     $this->theme_handler = $theme_handler;
     $this->encrypt = $encrypt;
+    $this->currentUser = $current_user;
   }
 
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('module_handler'),
       $container->get('theme_handler'),
-      $container->get('nexteuropa_dashboard_agent.encrypt')
+      $container->get('nexteuropa_dashboard_agent.encrypt'),
+      $container->get('current_user')
     );
   }
 
@@ -206,8 +217,7 @@ class NextEuropaDashboardController extends ControllerBase {
    */
   public function access() {
 
-    $account = \Drupal::currentUser();
-    if ($account->id() == 1) {
+    if ($this->currentUser == 1) {
       // Always allow the access to user 1.
       return AccessResult::allowed();
     }
