@@ -1,0 +1,7 @@
+name = NextEuropa Dashboard Agent
+description = "Agent used from the NextEuropa Dashboard. Provides an overview of all the used modules and a way to get a one time login link."
+core = 7.x
+configure = admin/config/system/nexteuropa-dashboard
+files[] = nexteuropa_dashboard_agent_encryption.inc
+php = 5.6
+multisite_version = 2.5

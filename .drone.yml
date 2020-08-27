@@ -1,0 +1,31 @@
+workspace:
+  base: /test
+  path: dashboard_connector
+
+matrix:
+  PHP_VERSION:
+    - 5.6
+    - 7.2
+    - 7.3
+
+pipeline:
+  # ============================================================================
+  # Tests ======================================================================
+  # ============================================================================
+  composer:
+    image: registry.fpfis.eu/fpfis/httpd-php:${PHP_VERSION=5.6}-dev
+    commands:
+      - composer install
+    when:
+      event: [ push ]
+    volumes:
+      - /cache/${DRONE_REPO_NAME}:/cache
+
+  grumphp:
+    image: registry.fpfis.eu/fpfis/httpd-php:${PHP_VERSION=5.6}-dev
+    secrets: [ github_api_token, qa_api_basic_auth ]
+    commands:
+      - ./vendor/bin/grumphp run
+    when:
+      event: [ push ]
+
