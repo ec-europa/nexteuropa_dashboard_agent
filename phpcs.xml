@@ -6,11 +6,9 @@
     <description>Drupal coding standard</description>
 
     <!-- Subsite ruleset is extended on QA Ruleset. -->
-    <rule ref="./vendor/consistence/coding-standard/Consistence/ruleset.xml" />
-    <file>./includes</file>
-    <file>./src</file>
-    <file>./tests</file>
-    <arg name="extensions" value="php"/>
+    <rule ref="./vendor/ec-europa/qa-automation/phpcs/Standards/QualityAssurance/ruleset.xml" />
+    <file>**</file>
+    <arg name="extensions" value="php,module,inc"/>
     <arg name="report" value="full"/>
     <arg value="p"/>
 

@@ -18,14 +18,12 @@ parameters:
             multiline: true
             additional_modifiers: ''
         phpcs:
-            null
-        yamllint:
-            null
-        phpmd:
-            whitelist_patterns: []
-            exclude: []
-            ruleset: [ 'cleancode', 'controversial', 'design', 'naming', 'unusedcode']
             triggered_by: ['module', 'inc']
+        # phpmd:
+        #     whitelist_patterns: []
+        #     exclude: []
+        #     ruleset: [ 'cleancode', 'controversial', 'design', 'unusedcode']
+        #     triggered_by: ['module', 'inc']
         phplint:
             null
         securitychecker:
