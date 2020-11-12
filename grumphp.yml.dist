@@ -1,0 +1,14 @@
+parameters:
+  ascii: ~
+  git_hook_variables:
+    EXEC_GRUMPHP_COMMAND: 'exec'
+  tasks:
+    git_commit_message:
+      matchers:
+        Must contain JIRA issue number: /[A-Z]+\-\d+:/
+    phpcs:
+      triggered_by: ['inc', 'install', 'module', 'php', 'yml']
+    phplint:
+      ~
+    securitychecker:
+      ~
