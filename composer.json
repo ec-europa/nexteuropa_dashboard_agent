@@ -11,9 +11,9 @@
         "php": ">=5.6"
     },
     "require-dev": {
-        "ec-europa/qa-automation": "^4.0",
+        "ec-europa/qa-automation": "4.0.*",
         "jakub-onderka/php-parallel-lint": "^v1.0",
-        "phpro/grumphp": "^v0.14",
+        "phpro/grumphp": "v0.14.*",
         "sensiolabs/security-checker": "^v5.0",
         "squizlabs/php_codesniffer": "^3.5"
     },
