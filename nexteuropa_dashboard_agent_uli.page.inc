@@ -2,47 +2,44 @@
 
 /**
  * @file
- * Logic for nexteuropa_dashboard_agent one time user login.
+ * nexteuropa_dashboard_agent_uli.page.inc
  */
 
-define('NEXTEUROPA_DASHBOARD_AGENT_UID_1', 'super_admin');
-define('NEXTEUROPA_DASHBOARD_AGENT_UID_ADMIN', 'user_administrator');
+define('NEXTEUROPA_DASHBOARD_AGENT_USER_UID1', 'superadmin');
+define('NEXTEUROPA_DASHBOARD_AGENT_USER_ADMIN', 'admin');
 
 /**
- * Returns a one time user login url for user id 1.
+ * Provides a user login url for the given user type in JSON format.
+ *
+ * User types:
+ * - super administrator;
+ * - administrator.
+ *
+ * @param string $user_type
  */
-function nexteuropa_dashboard_agent_uli_page($requested_for_user = FALSE) {
-  if ($requested_for_user !== FALSE) {
+function nexteuropa_dashboard_agent_uli_page($user_type) {
+  $available_user_types = [NEXTEUROPA_DASHBOARD_AGENT_USER_UID1, NEXTEUROPA_DASHBOARD_AGENT_USER_ADMIN];
+  if (!in_array($user_type, $available_user_types)) {
+    drupal_json_output(['error' => 412, 'msg' => sprintf('Invalid user type given %s.', $user_type)]);
+    drupal_exit();
+  }
 
-    switch ($requested_for_user) {
-      case NEXTEUROPA_DASHBOARD_AGENT_UID_1:
-        $uid = 1;
-        $account = user_load($uid);
-        drupal_json_output(user_pass_reset_url($account) . '/login');
-        break;
-
-      case NEXTEUROPA_DASHBOARD_AGENT_UID_ADMIN:
-        $account = user_load_by_name(NEXTEUROPA_DASHBOARD_AGENT_UID_ADMIN);
-        if ($account !== FALSE) {
-          drupal_json_output(user_pass_reset_url($account) . '/login');
-        }
-        elseif (module_exists('cce_basic_config') === FALSE) {
-          $uid = 1;
-          $account = user_load($uid);
-          drupal_json_output(user_pass_reset_url($account) . '/login');
-        }
-        else {
-          drupal_json_output('User ' . NEXTEUROPA_DASHBOARD_AGENT_UID_ADMIN . ' does not exist.');
-        }
-        break;
-
-      default:
-        drupal_json_output('Unknown user.');
-        break;
+  if ($user_type === NEXTEUROPA_DASHBOARD_AGENT_USER_ADMIN) {
+    $query = db_select('users', 'u')
+      ->fields('u', ['uid']);
+    $query->innerJoin('users_roles', 'ur', 'ur.uid = u.uid');
+    $query->innerJoin('role', 'r', 'r.rid = ur.rid');
+    $query->condition('u.mail', 'administrator@nomail.nodomain.notld', '=')
+      ->condition('u.init', 'root@localhost', '=')
+      ->condition('r.name', 'administrator', '=');
+    $uid = $query->execute()->fetchField();
+    if (!empty($uid)) {
+      $account = user_load($uid);
+      drupal_json_output(user_pass_reset_url($account) . '/login');
+      drupal_exit();
     }
   }
-  else {
-    drupal_json_output('No user specified.');
-  }
 
+  $account = user_load(1);
+  drupal_json_output(user_pass_reset_url($account) . '/login');
 }
