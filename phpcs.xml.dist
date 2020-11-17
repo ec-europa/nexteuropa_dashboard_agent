@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!-- PHP_CodeSniffer standard for NePipelines. -->
+<!-- See http://pear.php.net/manual/en/package.php.php-codesniffer.annotated-ruleset.php -->
+<ruleset name="NextEuropaDashboardAgent">
+  <description>Drupal coding standard</description>
+
+  <!-- Subsite ruleset is extended on QA Ruleset. -->
+  <rule ref="./vendor/ec-europa/qa-automation/phpcs/QualityAssurance/ruleset.xml" />
+
+  <file>**</file>
+  <arg name="extensions" value="inc,install,module,php,yml"/>
+  <arg name="report" value="full"/>
+  <arg value="p"/>
+</ruleset>
